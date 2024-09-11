@@ -6,6 +6,11 @@
 </head>
 <body>
 <h1>Hello World!</h1>
+<a href="/hello">홈페이지 메인</a>
+<!--hello.html 아님. 그냥 hello 
+자원에 대한 이름이나 정보에 대해서 잘 안알려줌
+컨트롤러에 찍어놓은 url만 찍어서 나옴
+모든 페이지를 경로를 만들어서 Controller.java에 추가할 것-->
 </body>
 </html>
 
@@ -13,3 +18,11 @@
 2번째 줄 xmlns : 스프링부트 데이터 처리한 걸 화면에 띄워주는데 ,  스프링 부트 -> html으로 하려면 thymeleaf로 찍어줘야함.
 우리는 thymeleaf를 사용하는 문서입니다. 라고 정의해주는거임.
 스프링을 위해 새로운 html5 언어를 배울 필요가 없으셈-->
+
+<!--2주차 34페이지
+해당 페이지에 접근할 수 없거나 자원이 없을때 나오는 Whitelabel Error Page
+a href = "/hello.html" 이런 링크연결 방식은 접근할 수가 없다.
+항상 URI 방식으로 접근
+
+접근하는 방식을 Controller에 등록해야함
+-->
