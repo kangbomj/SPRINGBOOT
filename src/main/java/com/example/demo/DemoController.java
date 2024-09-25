@@ -12,6 +12,11 @@ public class DemoController {
         //앞서 처리한 페이지를 다른 페이지로 전달
         return "hello"; //hello.html 연결
     }
+
+    @GetMapping("/about_detailed")
+    public String about() {
+    return "about_detailed";
+    }
 }
 
 //public 선언할 때 대문자(Public) X 소문자로 써야함.
