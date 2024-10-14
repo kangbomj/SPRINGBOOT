@@ -19,11 +19,22 @@ public class DemoController {
     //4주차 수정
     @GetMapping("/testdb")
     public String getAllTestDBs(Model model){
-        TestDB test = testService.findByName("홍길동");
-        model.addAttribute("data4", test);
-        System.out.println("데이터 출력 디버그 : " + test);
+        //20241015 연습문제 도전
+        TestDB test1 = testService.findByName("홍길동");
+        TestDB test2 = testService.findByName("이휴먼");
+        TestDB test3 = testService.findByName("강보미");
+
+        model.addAttribute("data4", test1);
+        model.addAttribute("data5", test2);
+        model.addAttribute("data6", test3);
+
+        System.out.println("데이터 출력 디버그 : " + test1);
+        System.out.println("데이터 출력 디버그 : " + test2);
+        System.out.println("데이터 출력 디버그 : " + test3);
+
         return "testdb";
     }
+
 
     @GetMapping("/hello") //전송방식 GET
     public String hello(Model model){
