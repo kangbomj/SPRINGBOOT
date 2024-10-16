@@ -1,4 +1,7 @@
 package com.example.demo.model.service;
+
+    import java.util.Optional;
+    
     import java.util.List;
     import org.springframework.beans.factory.annotation.Autowired;
     import org.springframework.stereotype.Service;
@@ -26,5 +29,19 @@ package com.example.demo.model.service;
             // .content(content)
             // .build();
             return blogRepository.save(request.toEntity());
+            }
+            
+            //게시판 수정 20241016 6주차
+            public Optional<Article> fineById(long id){
+                //게시판 특정 글 조회
+                return blogRepository.findById(id);
+            }
+
+            public void update(long id, AddArticleRequest request){
+                Optional<Article> optionalArticle = blogRepository.findById(id); //단일글조회
+                optionalArticle.ifPresent(article -> { //값이 있으면
+                    article.update(request.getTitle(), request.getContent()); //값을 수정
+                    blogRepository.save(article); //Article 객체에 저장
+                });
             }
     }

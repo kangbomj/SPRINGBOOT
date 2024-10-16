@@ -23,4 +23,11 @@ public class Article {
         this.title = title;
         this.content = content;
         }
+
+        //블로그 게시판 수정
+        public void Update(String title, String content){
+            //현재 객체 상태 업데이트
+            this.title = title;
+            this.content = content;
+        }
 }
