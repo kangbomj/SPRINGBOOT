@@ -8,25 +8,28 @@ import com.example.demo.model.service.BlogService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
-@RestController // @Controller + @ResponseBody
+//@RestController // @Controller + @ResponseBody
+@Controller
 public class BlogRestController {
     private final BlogService blogService;
 
-    @PostMapping("/api/articles")
-    public ResponseEntity<Article> addArticle(@ModelAttribute AddArticleRequest request) {
-        Article saveArticle = blogService.save(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-        .body(saveArticle);
-    }
+    // @PostMapping("/api/articles")
+    // public ResponseEntity<Article> addArticle(@ModelAttribute AddArticleRequest request) {
+    //     Article saveArticle = blogService.save(request);
+    //     return ResponseEntity.status(HttpStatus.CREATED)
+    //     .body(saveArticle);
+    // }
 
     //웹 브라우저 기본 사이트 접근 이후 루트의 favicon.ico 파일 자동 요청
     //static 폴더에 파일이 존재하지 않으면
     //에러발생 : MethodArgumentTypeMismatchException
     
     @GetMapping("/favicon.ico")
+    @ResponseBody //@RestContrller에서 Controller랑 ResponseBody로 쪼개줘서 리디렉션하게함.
     public void favicon(){
         //아무작업도 하지않음
     }
