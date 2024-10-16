@@ -14,7 +14,7 @@
                 <!-- 게시글 추가 폼 -->
                 <div class="mt-4">
                 <h2>게시글을 수정 합니다.</h2>
-                    <form th:action="@{/api/article_edit/{id}(id=${article.id})}" method="post" name="content">
+                    <form th:action="@{/api/article_edit/{id}(id=${article.id})}" method="post" name="content"> <!--a는 맞음-->
                     <input type="hidden" name="_method" value="put">
 
                     <div class="form-group">
@@ -31,7 +31,7 @@
                 </div>
                 
                 <!-- 게시글 리스트 -->
-                <div class="mt-5">
+                <!-- <div class="mt-5">
                 <h2>게시글 목록</h2>
             <table class="table table-bordered">
             <thead>
@@ -46,19 +46,19 @@
             <tr th:each="article : ${articles}">
             <td th:text="${article.id}"></td>
             <td th:text="${article.title}"></td>
-            <td th:text="${article.content}"></td>
+            <td th:text="${article.content}"></td> -->
             <!--6주차-->
-            <td>
+            <!-- <td> -->
                 <!-- 수정 버튼 -->
-                <a class="btn btn-warning" th:href="@{/article_edit/{id}(id=${article.id})}">수정</a>
+                <!-- <a class="btn btn-warning" th:href="@{/article_edit/{id}(id=${article.id})}">수정</a> -->
                 <!-- 삭제 버튼 -->
-                <a class="btn btn-warning" th:href="@{/article_edit/{id}(id=${article.id})}">삭제</a>
-            </td>
+                <!-- <a class="btn btn-warning" th:href="@{/article_edit/{id}(id=${article.id})}">삭제</a> -->
+            <!-- </td> -->
 
-            </tr>
+            <!-- </tr>
         </tbody>
         </table>
-        </div>
+        </div> -->
         </div>
     </body>
 </html>

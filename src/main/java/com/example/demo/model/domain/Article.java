@@ -25,7 +25,7 @@ public class Article {
         }
 
         //블로그 게시판 수정
-        public void Update(String title, String content){
+        public void update(String title, String content){ //20241016 Update -> update로 수정
             //현재 객체 상태 업데이트
             this.title = title;
             this.content = content;
