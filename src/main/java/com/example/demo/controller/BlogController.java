@@ -62,7 +62,7 @@ public class BlogController {
         else{
             //처리할 로직 추가 (예 : 오류 페이지로 리다이렉트, 예외 처리 등)
             //return "error"; //오류 처리 페이지로 연결
-            return "article_error"; // 오류 처리 페이지로 연결
+            return "/article_error"; // 오류 처리 페이지로 연결
 
         }
         return "article_edit"; //.HTML연결
