@@ -79,4 +79,16 @@ public class BlogController {
         blogService.delete(id);
         return "redirect:/article_list";
     }
+
+    //7주차 13페이지 보드게시판
+
+    @GetMapping("/board_list") //새로운 게시판 링크지정
+    public String board_list(Model model){
+        //List<Board> list = blogService.findAll(); //게시판 전체리스트
+        //model.addAttributte("articles", list); //모델에 추가
+        List<Board> list = blogService.findAll(); //게시판 전체리스트
+        return "board_list"; //.HTML 연결
+
+        //보드가 없는데 이 코드 먼저 실행시키니까 안됐던거임. 리스트 모델에 추가하는거 먼저하지말고 주석처리-> 그냥 HTML만 맵핑 -> 실행 -> 데이터배이스 생성 Refresh -> 주석 해제
+    }
 }
