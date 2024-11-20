@@ -1,101 +1,80 @@
 package com.example.demo.model.service;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import com.example.demo.model.domain.Article;
+import com.example.demo.model.domain.Board;
+import com.example.demo.model.repository.BlogRepository;
+import com.example.demo.model.repository.BoardRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
-    import lombok.RequiredArgsConstructor;
-    import java.util.Optional;
-    import java.util.List;
-    import org.springframework.beans.factory.annotation.Autowired;
-    import org.springframework.stereotype.Service;
-    import com.example.demo.model.domain.Article;
-    import com.example.demo.model.repository.BlogRepository;
-    import com.example.demo.model.domain.Board;
-    import com.example.demo.model.repository.BoardRepository;
+@Service
+@RequiredArgsConstructor // 생성자 자동 생성(부분)
+public class BlogService {
+    @Autowired // 객체 주입 자동화, 생성자 1개면 생략 가능
+    private final BlogRepository blogRepository;
+    @Autowired
+    private final BoardRepository boardRepository; // 리포지토리 선언
 
-    @Service
-    @RequiredArgsConstructor // 생성자 자동 생성(부분)
-    public class BlogService {
-        @Autowired 
-        //private final BlogRepository blogRepository;
-        private final BoardRepository blogRepository;
-        //20241106 7주차 Board 수정
-
-        public List<Board> findAll() { // 게시판 전체 목록 조회
-        return blogRepository.findAll();
-        }
-
-        public Optional<Board> findById(Long id) {
-            return blogRepository.findById(id);
-        }
-
-
-        // public Article save(AddArticleRequest request){
-        //     // DTO가 없는 경우 이곳에 직접 구현 가능
-        //     //일반적으로 서비스는 DTO 구현하지 않는다.
-        //     // public ResponseEntity<Article> addArticle(@RequestParam String title, @RequestParam String content) {
-        //     // Article article = Article.builder()
-        //     // .title(title)
-        //     // .content(content)
-        //     // .build();
-        //     return blogRepository.save(request.toEntity());
-        //     }
-            
-        //     //게시판 수정 20241016 6주차
-        //     public Optional<Article> findById(Long id){
-        //         return blogRepository.findById(id);//게시판 특정 글 조회
-        //     }
-
-        //     public void update(Long id, AddArticleRequest request){
-        //         Optional<Article> optionalArticle = blogRepository.findById(id); //단일글조회
-        //         optionalArticle.ifPresent(article -> { //값이 있으면
-        //             article.update(request.getTitle(), request.getContent()); //값을 수정
-        //             blogRepository.save(article); //Article 객체에 저장
-        //         });
-        //     }
-
-        //     public void delete(Long id){
-        //         blogRepository.deleteById(id);
-        //     }
+    public List<Article> findAll() { // 게시판 전체 목록 조회
+        return blogRepository.findAll(); // 모든 게시글을 조회하여 반환
     }
 
+    public List<Board> findAllBoard() { // 게시판 전체 목록 조회
+        return boardRepository.findAll(); // 모든 게시글을 조회하여 반환
+    }
 
-    //6주차까지 코드
-    // @Service
-    // @RequiredArgsConstructor // 생성자 자동 생성(부분)
-    // public class BlogService {
-    //     @Autowired 
-    //     //private final BlogRepository blogRepository;
-    //     private final BoardRepository blogRepository;
-    //     //20241106 7주차 Board 수정
+    public Optional<Board> findByIdBoard(Long id) { // ID로 게시글 조회
+        return boardRepository.findById(id); // 주어진 ID로 게시글을 찾아 반환
+    }
 
-    //     public List<Article> findAll() { // 게시판 전체 목록 조회
-    //     return blogRepository.findAll();
-    //     }
+    public Board saveBoard(AddBoardRequest request) { // 새로운 게시글 저장
+        return boardRepository.save(request.toEntity()); // 요청을 엔티티로 변환하여 저장
+    }
 
+    public Page<Board> findAllBoard(Pageable pageable) { // 게시글 페이지 조회
+        return boardRepository.findAll(pageable); // 페이지 조회
+    }
 
-    //     public Article save(AddArticleRequest request){
-    //         // DTO가 없는 경우 이곳에 직접 구현 가능
-    //         //일반적으로 서비스는 DTO 구현하지 않는다.
-    //         // public ResponseEntity<Article> addArticle(@RequestParam String title, @RequestParam String content) {
-    //         // Article article = Article.builder()
-    //         // .title(title)
-    //         // .content(content)
-    //         // .build();
-    //         return blogRepository.save(request.toEntity());
-    //         }
-            
-    //         //게시판 수정 20241016 6주차
-    //         public Optional<Article> findById(Long id){
-    //             return blogRepository.findById(id);//게시판 특정 글 조회
-    //         }
+    public Page<Board> searchByKeyword(String keyword, Pageable pageable) { // 게시글 키워드 조회
+        return boardRepository.findByTitleContainingIgnoreCase(keyword, pageable); // 키워드 조회
+    }
 
-    //         public void update(Long id, AddArticleRequest request){
-    //             Optional<Article> optionalArticle = blogRepository.findById(id); //단일글조회
-    //             optionalArticle.ifPresent(article -> { //값이 있으면
-    //                 article.update(request.getTitle(), request.getContent()); //값을 수정
-    //                 blogRepository.save(article); //Article 객체에 저장
-    //             });
-    //         }
+    
 
-    //         public void delete(Long id){
-    //             blogRepository.deleteById(id);
-    //         }
-    // }
+    public Article save(AddArticleRequest request){ // 새로운 게시글 저장
+        return blogRepository.save(request.toEntity()); // 요청을 엔티티로 변환하여 저장
+    }
+
+    public Optional<Article> findById(Long id){ // ID로 게시글 조회
+        return blogRepository.findById(id); // 주어진 ID로 게시글을 찾아 반환
+    }
+
+    public void update(Long id, AddArticleRequest request) { // 게시글 수정
+        Optional<Article> optionalArticle = blogRepository.findById(id); // 주어진 ID로 게시글을 찾음
+        optionalArticle.ifPresent(article -> { // 게시글이 존재하면
+            article.update(request.getTitle(), request.getContent()); // 제목과 내용을 업데이트
+            blogRepository.save(article); // 업데이트된 게시글을 저장
+        });
+    }
+
+    public void updateBoard(Long id, AddBoardRequest request) { // 게시글 수정
+        Optional<Board> optionalBoard = boardRepository.findById(id); // 주어진 ID로 게시글을 찾음
+        optionalBoard.ifPresent(board -> { // 게시글이 존재하면
+            board.update(request.getTitle(), request.getContent(), request.getUser(), request.getNewdate(), request.getCount(), request.getLikecount()); // 제목과 내용을 업데이트
+            boardRepository.save(board); // 업데이트된 게시글을 저장
+        });
+    }
+
+    public void delete(Long id) { // 게시글 삭제
+        blogRepository.deleteById(id); // 주어진 ID로 게시글을 삭제
+    }
+
+    public void deleteBoard(Long id) { // 게시글 삭제
+        boardRepository.deleteById(id); // 주어진 ID로 게시글을 삭제
+    }
+}

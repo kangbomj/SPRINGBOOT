@@ -1,94 +1,194 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.domain.Article;
-import com.example.demo.model.service.AddArticleRequest;
-import com.example.demo.model.service.BlogService;
-//import com.example.demo.model.repository.BlogRepository;
-
 import java.util.List;
-
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;//@Autowired 사용
+//import org.apache.el.stream.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import com.example.demo.model.domain.Article;
+import com.example.demo.model.domain.Board;
+import com.example.demo.model.service.BlogService;
+import com.example.demo.model.service.AddArticleRequest;
+import com.example.demo.model.service.AddBoardRequest;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestParam;
 
-@Controller //컨트롤러 어노테이션 명시
+
+@Controller
+//@ResponseBody
 public class BlogController {
-    @Autowired
-    BlogService blogService;
+    private final BlogService blogService;
 
-    //DemoController.java를 재활용한다. 5주차 10페이지
+    public BlogController(BlogService blogService) {
+        this.blogService = blogService;
+    }
 
     @GetMapping("/article_list")
-    public String article_list(Model model){
-        List<Article> list = blogService.findAll(); //게시판 리스트
-        model.addAttribute("articles", list); //모델에 추가
-        //articles라는게 어딨노 일단 주석
-        //addAttributes라는 건 없다.
-        return "article_list"; //.HTML 연결
+    public String article_list(Model model) {
+        List<Article> list = blogService.findAll(); // 게시판 리스트
+        model.addAttribute("articles", list); // 모델에 추가
+        return "article_list"; // .HTML 연결
+    }
+
+    @GetMapping("/board_list")
+    public String board_list(Model model, @RequestParam(defaultValue = "0") int page, 
+                                          @RequestParam(defaultValue = "") String keyword) {
+        int pageSize = 3;
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<Board> list;
+
+        if (keyword.isEmpty()) {
+            list = blogService.findAllBoard(pageable);
+        } 
+        else {
+            list = blogService.searchByKeyword(keyword, pageable);
+        }
+
+        // 현재 페이지의 시작 번호 계산
+        int startNum = (page * pageSize) + 1;
+        
+        model.addAttribute("boards", list);
+        model.addAttribute("totalPages", list.getTotalPages());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("startNum", startNum); // 시작 번호를 뷰로 전달
+        return "board_list";
+    }
+
+    @GetMapping("/article_edit/{id}") // 게시판 링크 지정
+    public String article_edit(Model model, @PathVariable Long id) {
+        Optional<Article> list = blogService.findById(id); // 선택한 게시판 글
+        if (list.isPresent()) {
+            model.addAttribute("article", list.get()); // 존재하면 Article 객체를 모델에 추가
+        } 
+        else {
+        // 처리할 로직 추가 (예: 오류 페이지로 리다이렉트, 예외 처리 등)
+                return "/article_error"; // 오류 처리 페이지로 연결
+        }
+        return "article_edit"; // .HTML 연결
+    }
+
+    @GetMapping("/board_edit/{id}") // 게시판 링크 지정
+    public String board_edit(Model model, @PathVariable Long id) {
+        Optional<Board> list = blogService.findByIdBoard(id); // 선택한 게시판 글
+        if (list.isPresent()) {
+            model.addAttribute("board", list.get()); // 존재하면 Board 객체를 모델에 추가
+        } else {
+            return "article_error"; // 오류 처리 페이지로 연결
+        }
+        return "board_edit"; // .HTML 연결
+    }
+
+    @GetMapping("/board_view/{id}") // 게시판 링크 지정
+    public String board_view(Model model, @PathVariable Long id) {
+        Optional<Board> list = blogService.findByIdBoard(id); // 선택한 게시판 글
+        if (list.isPresent()) {
+            model.addAttribute("boards", list.get()); // 존재할 경우 실제 Article 객체를 모델에 추가
+        } else {
+            // 처리할 로직 추가 (예: 오류 페이지로 리다이렉트, 예외 처리 등)
+            return "article_error"; // 오류 처리 페이지로 연결
+        }
+        return "board_view"; // .HTML 연결
+    }
+
+    @GetMapping("/board_write")
+    public String board_write() {
+        return "board_write";
     }
     
-    
-    //5주차 연습문제 리디렉션
+    // 새 게시글 추가
     @PostMapping("/api/articles")
     public String addArticle(@ModelAttribute AddArticleRequest request) {
         blogService.save(request);
-        return "redirect:/article_list";
+        return "redirect:/article_list"; // 게시글 추가 후 목록 페이지로 리다이렉트
     }
 
-    //6주차 에러페이지 맵핑 임의로해봄
-    @GetMapping("/article_error")
-    public String about() {
-    return "article_error";
+    @PostMapping("/api/boards")
+    public String addBoard(@ModelAttribute AddBoardRequest request) {
+        blogService.saveBoard(request);
+        return "redirect:/board_list";
     }
 
-    //6주차 8페이지
-    @GetMapping("/article_edit/{id}") //게시판 링크지정
-    public String article_edit(Model model, @PathVariable Long id){
-        Optional<Article> list = blogService.findById(id); //선택한 게시판 글
+    // @PostMapping("/api/boards")
+    // public String addBoard(@ModelAttribute AddBoardRequest request) {
+    //     blogService.saveBoard(request);
+    //     return "redirect:/board_list"; // 게시글 추가 후 목록 페이지로 리다이렉트
+    // }
 
-        if(list.isPresent()){
-            model.addAttribute("article", list.get()); //존재하면 Article 객체를 모델에 추가
-
-        }
-        else{
-            //처리할 로직 추가 (예 : 오류 페이지로 리다이렉트, 예외 처리 등)
-            //return "error"; //오류 처리 페이지로 연결
-            return "/article_error"; // 오류 처리 페이지로 연결
-
-        }
-        return "article_edit"; //.HTML연결
+    // 게시글 수정
+    //@ResponseBody
+    @PutMapping("/api/article_edit/{id}") // PUT 방식으로 /api/article_edit/게시글번호 주소로 요청이 오면
+    public String updateArticle(
+        @PathVariable Long id,  // URL에서 게시글 번호를 가져와서
+        @ModelAttribute AddArticleRequest request // 수정할 내용을 요청에서 받아옵니다
+    ) {
+        blogService.update(id, request); // 블로그 서비스를 통해 게시글을 수정하고
+        return "redirect:/article_list"; // 수정이 끝나면 게시글 목록 페이지로 돌아갑니다
     }
 
-    @PutMapping("/api/article_edit/{id}")
-    public String updateArticle(@PathVariable Long id, @ModelAttribute AddArticleRequest request){
-        blogService.update(id, request);
-        return "redirect:/article_list"; //글 수정 이후 .html 연결
+    @PutMapping("/api/board_edit/{id}")
+    public String updateBoard(
+        @PathVariable Long id,
+        @ModelAttribute AddBoardRequest request
+    ) {
+        blogService.updateBoard(id, request);
+        return "redirect:/board_list";
     }
 
+    // 게시글 삭제
     @DeleteMapping("/api/article_delete/{id}")
-    public String deleteArticle(@PathVariable Long id){
+    public String deleteArticle(@PathVariable Long id) {
         blogService.delete(id);
-        return "redirect:/article_list";
+        return "redirect:/article_list"; // 게시글 삭제 후 목록 페이지로 리다이렉트
     }
 
-    //7주차 13페이지 보드게시판
-
-    @GetMapping("/board_list") //새로운 게시판 링크지정
-    public String board_list(Model model){
-        //List<Board> list = blogService.findAll(); //게시판 전체리스트
-        //model.addAttributte("articles", list); //모델에 추가
-        List<Board> list = blogService.findAll(); //게시판 전체리스트
-        return "board_list"; //.HTML 연결
-
-        //보드가 없는데 이 코드 먼저 실행시키니까 안됐던거임. 리스트 모델에 추가하는거 먼저하지말고 주석처리-> 그냥 HTML만 맵핑 -> 실행 -> 데이터배이스 생성 Refresh -> 주석 해제
+    @DeleteMapping("/api/board_delete/{id}")
+    public String deleteBoard(@PathVariable Long id) {
+        blogService.deleteBoard(id);
+        return "redirect:/board_list";
     }
+
+    // 전역 예외 처리
+    @ControllerAdvice
+    public class GlobalExceptionHandler {
+        // ID가 잘못된 형식일 때 예외 처리
+        @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+        public ModelAndView handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+            ModelAndView mv = new ModelAndView("/article_string_error");
+            mv.addObject("errorMessage", "잘못된 요청입니다(문자열 오류). 올바른 ID를 입력해주세요.");
+            return mv; // 에러 페이지로 이동
+        }
+        // MethodArgumentTypeMismatchException 예외는 주로 잘못된 형식의 매개변수가 전달될 때 발생합니다.
+        // 예를 들어, 숫자형 ID가 필요한 곳에 문자열이 전달되었을 때 이 예외가 발생합니다.
+
+        // 기타 예외 처리
+        @ExceptionHandler(Exception.class)
+        public ModelAndView handleException(Exception ex) {
+            ModelAndView mv = new ModelAndView("/article_string_error");
+            mv.addObject("errorMessage", "예기치 않은 오류가 발생했습니다. 다시 시도해주세요.");
+            return mv; // 에러 페이지로 이동
+        }
+        // Exception 예외는 모든 종류의 예외를 포괄적으로 처리합니다.
+        // 특정 예외를 처리하지 못한 경우 이 핸들러가 작동하여 일반적인 오류 메시지를 반환합니다.
+    }
+    // 이 예외 처리기는 모든 컨트롤러에서 발생하는 MethodArgumentTypeMismatchException 예외를 처리합니다.
+    // article_edit에서만 작동하는 이유는 article_edit 메서드에서 @PathVariable Long id를 사용하기 때문입니다.
+    // 만약 잘못된 형식의 ID가 전달되면 MethodArgumentTypeMismatchException 예외가 발생하고, 이 예외 처리기가 작동하게 됩니다.
+    // 다른 메서드에서도 @PathVariable Long id를 사용하면 동일하게 작동합니다.
+
 }
