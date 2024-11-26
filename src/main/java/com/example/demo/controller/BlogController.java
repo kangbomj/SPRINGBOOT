@@ -163,32 +163,32 @@ public class BlogController {
         return "redirect:/board_list";
     }
 
-    // 전역 예외 처리
-    @ControllerAdvice
-    public class GlobalExceptionHandler {
-        // ID가 잘못된 형식일 때 예외 처리
-        @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-        public ModelAndView handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
-            ModelAndView mv = new ModelAndView("/article_string_error");
-            mv.addObject("errorMessage", "잘못된 요청입니다(문자열 오류). 올바른 ID를 입력해주세요.");
-            return mv; // 에러 페이지로 이동
-        }
-        // MethodArgumentTypeMismatchException 예외는 주로 잘못된 형식의 매개변수가 전달될 때 발생합니다.
-        // 예를 들어, 숫자형 ID가 필요한 곳에 문자열이 전달되었을 때 이 예외가 발생합니다.
+    // // 전역 예외 처리
+    // @ControllerAdvice
+    // public class GlobalExceptionHandler {
+    //     // ID가 잘못된 형식일 때 예외 처리
+    //     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    //     public ModelAndView handleTypeMismatch(MethodArgumentTypeMismatchException ex) {
+    //         ModelAndView mv = new ModelAndView("/article_string_error");
+    //         mv.addObject("errorMessage", "잘못된 요청입니다(문자열 오류). 올바른 ID를 입력해주세요.");
+    //         return mv; // 에러 페이지로 이동
+    //     }
+    //     // MethodArgumentTypeMismatchException 예외는 주로 잘못된 형식의 매개변수가 전달될 때 발생합니다.
+    //     // 예를 들어, 숫자형 ID가 필요한 곳에 문자열이 전달되었을 때 이 예외가 발생합니다.
 
-        // 기타 예외 처리
-        @ExceptionHandler(Exception.class)
-        public ModelAndView handleException(Exception ex) {
-            ModelAndView mv = new ModelAndView("/article_string_error");
-            mv.addObject("errorMessage", "예기치 않은 오류가 발생했습니다. 다시 시도해주세요.");
-            return mv; // 에러 페이지로 이동
-        }
-        // Exception 예외는 모든 종류의 예외를 포괄적으로 처리합니다.
-        // 특정 예외를 처리하지 못한 경우 이 핸들러가 작동하여 일반적인 오류 메시지를 반환합니다.
-    }
-    // 이 예외 처리기는 모든 컨트롤러에서 발생하는 MethodArgumentTypeMismatchException 예외를 처리합니다.
-    // article_edit에서만 작동하는 이유는 article_edit 메서드에서 @PathVariable Long id를 사용하기 때문입니다.
-    // 만약 잘못된 형식의 ID가 전달되면 MethodArgumentTypeMismatchException 예외가 발생하고, 이 예외 처리기가 작동하게 됩니다.
-    // 다른 메서드에서도 @PathVariable Long id를 사용하면 동일하게 작동합니다.
+    //     // 기타 예외 처리
+    //     @ExceptionHandler(Exception.class)
+    //     public ModelAndView handleException(Exception ex) {
+    //         ModelAndView mv = new ModelAndView("/article_string_error");
+    //         mv.addObject("errorMessage", "예기치 않은 오류가 발생했습니다. 다시 시도해주세요.");
+    //         return mv; // 에러 페이지로 이동
+    //     }
+    //     // Exception 예외는 모든 종류의 예외를 포괄적으로 처리합니다.
+    //     // 특정 예외를 처리하지 못한 경우 이 핸들러가 작동하여 일반적인 오류 메시지를 반환합니다.
+    // }
+    // // 이 예외 처리기는 모든 컨트롤러에서 발생하는 MethodArgumentTypeMismatchException 예외를 처리합니다.
+    // // article_edit에서만 작동하는 이유는 article_edit 메서드에서 @PathVariable Long id를 사용하기 때문입니다.
+    // // 만약 잘못된 형식의 ID가 전달되면 MethodArgumentTypeMismatchException 예외가 발생하고, 이 예외 처리기가 작동하게 됩니다.
+    // // 다른 메서드에서도 @PathVariable Long id를 사용하면 동일하게 작동합니다.
 
 }

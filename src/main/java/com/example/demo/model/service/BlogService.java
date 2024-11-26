@@ -77,4 +77,5 @@ public class BlogService {
     public void deleteBoard(Long id) { // 게시글 삭제
         boardRepository.deleteById(id); // 주어진 ID로 게시글을 삭제
     }
+
 }
