@@ -2,8 +2,6 @@ package com.example.demo.controller;
 
 import java.util.List;
 import java.util.Optional;
-
-//import org.apache.el.stream.Optional;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,17 +14,18 @@ import com.example.demo.model.domain.Board;
 import com.example.demo.model.service.BlogService;
 import com.example.demo.model.service.AddArticleRequest;
 import com.example.demo.model.service.AddBoardRequest;
-//import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.DeleteMapping;
+//import org.springframework.web.bind.annotation.RequestParam;
+//import org.springframework.web.bind.annotation.ResponseBody;
+//import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+//import org.springframework.web.servlet.ModelAndView;
+//import org.springframework.web.bind.annotation.ControllerAdvice;
+//import org.springframework.web.bind.annotation.ExceptionHandler;
+//import org.apache.el.stream.Optional;
 
 
 @Controller
