@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+
 import com.example.demo.model.domain.Member;
 import com.example.demo.model.service.MemberService;
 import com.example.demo.model.service.AddMemberRequest;
 import com.example.demo.model.repository.MemberRepository;
+
+import jakarta.validation.Valid;
+import lombok.Setter;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,18 +27,27 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 
 
+@Controller
 public class MemberController {
 
-    private final MemberService memberService;
-    private final MemberRepository memberRepository;
-    private final PasswordEncoder passwordEncoder;
+    // private final MemberService memberService;
+    // private final MemberRepository memberRepository;
+    // private final PasswordEncoder passwordEncoder;
 
-    public MemberController(MemberService memberService, MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    // public MemberController(MemberService memberService, MemberRepository memberRepository, PasswordEncoder passwordEncoder) {
+    //     this.memberService = memberService;
+    //     this.memberRepository = memberRepository;
+    //     this.passwordEncoder = passwordEncoder;
+    // }
+
+    private final MemberService memberService;
+
+    public MemberController(MemberService memberService) {
         this.memberService = memberService;
-        this.memberRepository = memberRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping("/join_new") //회원가입페이지
@@ -42,13 +55,26 @@ public class MemberController {
         return "join_new";
     }
 
-    // @PostMapping("/api/members") //저장
-    // public String addmembers(@ModelAttribute MemberService request){
-    //     memberServie.saveMember(request);
-    //     return "join_end";
-    //}
+    //CHATGPT 코드
+    //검증실패시 적절히 처리하도록 수정
+    @PostMapping("/api/members") //저장
+    public String addmembers(@Valid @ModelAttribute AddMemberRequest request, BindingResult bindingResult, Model model) {
+        
+        //검증 실패 시 오류 처리
+        if(bindingResult.hasErrors()){
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "join_new";
+        }
+        try {
+            memberService.saveMember(request); // AddMemberRequest 타입으로 전달
+            return "join_end"; // 성공 시 페이지 이동
+        } catch (IllegalStateException e) {
+            model.addAttribute("error", e.getMessage()); // 중복 회원 예외 처리
+            return "join_new"; // 실패 시 회원가입 페이지로 이동
+        }
+    }
 
-    @GetMapping("/member_login") //로그인페이지
+    @GetMapping("/login") //로그인페이지
     public String member_login(){
         return "login";
     }
@@ -63,18 +89,5 @@ public class MemberController {
             model.addAttribute("error", e.getMessage());
             return "login";
         }
-    }
-
-    public Member loginCheck(String email, String rawPassword){
-        Member member = memberRepository.findByEmail(email);
-        if (member == null){
-            throw new IllegalArgumentException("등록되지 않은 이메일");
-        }
-
-        if (!passwordEncoder.matches(rawPassword, member.getPassword())){
-            throw new IllegalArgumentException("비밀번호 불일치");
-        }
-
-        return member;
     }
 }

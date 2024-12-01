@@ -4,7 +4,9 @@ import jakarta.persistence.Id;
 import lombok.*; //어노테이션 자동생성
 import jakarta.persistence.*; // 기존 javax 후속 버전
 
-
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
