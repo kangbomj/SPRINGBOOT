@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.UUID;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import com.example.demo.model.service.MemberService;
 import com.example.demo.model.service.AddMemberRequest;
 import com.example.demo.model.repository.MemberRepository;
 
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.Setter;
 
@@ -80,9 +82,11 @@ public class MemberController {
     }
 
     @PostMapping("/api/login_check")
-    public String checkMembers(@ModelAttribute AddMemberRequest request, Model model){
+    public String checkMembers(@ModelAttribute AddMemberRequest request, Model model, HttpSession session){
         try{
             Member member = memberService.loginCheck(request.getEmail(), request.getPassword());
+            String sessionId = UUID.randomUUID().toString();
+            session.setAttribute("userID", sessionId);
             model.addAttribute("member", member); //정보 전달
             return "redirect:/board_list";
         } catch (IllegalArgumentException e) {

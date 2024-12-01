@@ -22,10 +22,10 @@ public class AddMemberRequest {
     @Pattern(regexp = ".*[!@#$%^&*(),.?\":{}|<>].*", message = "비밀번호에는 특수문자가 포함되어야 합니다.")
     private String password;
 
-    @NotBlank(message = "나이는 공백이 허용되지 않습니다.")
+    @NotNull(message = "나이는 필수 입력값입니다.")
     @Min(value = 19, message = "나이는 최소 19세 이상이어야 합니다.")
     @Max(value = 90, message = "나이는 최대 90세 이하이어야 합니다.")
-    private String age;
+    private Integer age;
 
     private String mobile; //공백허용
     private String address; //공백허용
@@ -35,7 +35,7 @@ public class AddMemberRequest {
         .name(name)
         .email(email)
         .password(password)
-        .age(age)
+        .age(String.valueOf(age))
         .mobile(mobile)
         .address(address)
         .build();

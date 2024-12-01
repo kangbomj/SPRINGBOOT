@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import jakarta.servlet.http.HttpSession;
+import java.util.UUID;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.stereotype.Controller;
@@ -44,9 +46,19 @@ public class BlogController {
         return "article_list"; // .HTML 연결
     }
 
+    //10주차 10페이지 로그인 기능 추가
     @GetMapping("/board_list")
-    public String board_list(Model model, @RequestParam(defaultValue = "0") int page, 
-                                          @RequestParam(defaultValue = "") String keyword) {
+    public String board_list(
+        Model model, 
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "") String keyword,
+        HttpSession session) {
+        String userId = (String) session.getAttribute("userId");
+
+        if (userId == null){
+            return "redirect:/member_login";
+        }
+        System.out.println("세션 userId : "+ userId);
         int pageSize = 3;
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Board> list;
