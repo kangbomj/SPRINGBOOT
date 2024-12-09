@@ -10,28 +10,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
-
 import com.example.demo.model.domain.Member;
 import com.example.demo.model.service.MemberService;
 import com.example.demo.model.service.AddMemberRequest;
 import com.example.demo.model.repository.MemberRepository;
-
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import lombok.Setter;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.DeleteMapping;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-
 
 @Controller
 public class MemberController {
@@ -53,7 +48,7 @@ public class MemberController {
     }
 
     @GetMapping("/join_new") //회원가입페이지
-    public String join_new(){
+    public String join_new() {
         return "join_new";
     }
 
@@ -61,12 +56,12 @@ public class MemberController {
     //검증실패시 적절히 처리하도록 수정
     @PostMapping("/api/members") //저장
     public String addmembers(@Valid @ModelAttribute AddMemberRequest request, BindingResult bindingResult, Model model) {
-        
         //검증 실패 시 오류 처리
-        if(bindingResult.hasErrors()){
+        if(bindingResult.hasErrors()) {
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "join_new";
         }
+
         try {
             memberService.saveMember(request); // AddMemberRequest 타입으로 전달
             return "join_end"; // 성공 시 페이지 이동
@@ -77,13 +72,13 @@ public class MemberController {
     }
 
     @GetMapping("/login") //로그인페이지
-    public String member_login(){
+    public String login() {
         return "login";
     }
 
     @PostMapping("/api/login_check")
-    public String checkMembers(@ModelAttribute AddMemberRequest request, Model model, HttpSession session){
-        try{
+    public String checkMembers(@ModelAttribute AddMemberRequest request, Model model, HttpSession session) {
+        try {
             Member member = memberService.loginCheck(request.getEmail(), request.getPassword());
             String sessionId = UUID.randomUUID().toString();
             session.setAttribute("userID", sessionId);

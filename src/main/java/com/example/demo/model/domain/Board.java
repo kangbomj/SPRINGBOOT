@@ -13,6 +13,7 @@ import jakarta.persistence.*; // 기존 javax 후속 버전
 @Builder
 @AllArgsConstructor
 public class Board {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
@@ -53,4 +54,5 @@ public class Board {
         this.count = count;
         this.likecount = likecount;
     }
+
 }

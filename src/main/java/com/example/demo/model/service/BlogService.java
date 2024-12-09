@@ -1,4 +1,5 @@
 package com.example.demo.model.service;
+
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +16,10 @@ import org.springframework.data.domain.Pageable;
 @Service
 @RequiredArgsConstructor // 생성자 자동 생성(부분)
 public class BlogService {
+
     @Autowired // 객체 주입 자동화, 생성자 1개면 생략 가능
     private final BlogRepository blogRepository;
+
     @Autowired
     private final BoardRepository boardRepository; // 리포지토리 선언
 
@@ -44,13 +47,11 @@ public class BlogService {
         return boardRepository.findByTitleContainingIgnoreCase(keyword, pageable); // 키워드 조회
     }
 
-    
-
-    public Article save(AddArticleRequest request){ // 새로운 게시글 저장
+    public Article save(AddArticleRequest request) { // 새로운 게시글 저장
         return blogRepository.save(request.toEntity()); // 요청을 엔티티로 변환하여 저장
     }
 
-    public Optional<Article> findById(Long id){ // ID로 게시글 조회
+    public Optional<Article> findById(Long id) { // ID로 게시글 조회
         return blogRepository.findById(id); // 주어진 ID로 게시글을 찾아 반환
     }
 
@@ -77,5 +78,4 @@ public class BlogService {
     public void deleteBoard(Long id) { // 게시글 삭제
         boardRepository.deleteById(id); // 주어진 ID로 게시글을 삭제
     }
-
 }

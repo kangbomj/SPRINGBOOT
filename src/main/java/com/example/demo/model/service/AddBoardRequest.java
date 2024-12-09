@@ -1,4 +1,5 @@
 package com.example.demo.model.service;
+
 import lombok.*; // 어노테이션 자동 생성
 import com.example.demo.model.domain.Board;
 
@@ -15,12 +16,12 @@ public class AddBoardRequest { //DTO 클래스
 
     public Board toEntity() {
         return Board.builder()
-        .title(title)
-        .content(content)
-        .user(user)
-        .newdate(newdate)
-        .count(count)
-        .likecount(likecount)
-        .build();
+                .title(title)
+                .content(content)
+                .user(user)
+                .newdate(newdate)
+                .count(count)
+                .likecount(likecount)
+                .build();
     }
 }

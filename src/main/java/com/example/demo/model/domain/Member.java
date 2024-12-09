@@ -1,3 +1,4 @@
+
 package com.example.demo.model.domain;
 
 import jakarta.persistence.Id;
@@ -8,6 +9,7 @@ import jakarta.persistence.*; // 기존 javax 후속 버전
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", updatable = false)
@@ -32,7 +34,7 @@ public class Member {
     private String address = "";
 
     @Builder
-    public Member(String name, String email, String password, String age, String mobile, String address){
+    public Member(String name, String email, String password, String age, String mobile, String address) {
         this.name = name;
         this.email = email;
         this.password = password;

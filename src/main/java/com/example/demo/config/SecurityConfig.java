@@ -11,14 +11,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration // Bean 배열 생성 시점
 @EnableWebSecurity //웹 보안 활성화
 public class SecurityConfig {
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
         return http.build();
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
