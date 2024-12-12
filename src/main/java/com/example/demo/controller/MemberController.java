@@ -75,18 +75,22 @@ public class MemberController {
     public String login() {
         return "login";
     }
-
+    
     @PostMapping("/api/login_check")
     public String checkMembers(@ModelAttribute AddMemberRequest request, Model model, HttpSession session) {
-        try {
+        try {    
             Member member = memberService.loginCheck(request.getEmail(), request.getPassword());
             String sessionId = UUID.randomUUID().toString();
+            String email = request.getEmail();
             session.setAttribute("userID", sessionId);
+            session.setAttribute("email", email);
             model.addAttribute("member", member); //정보 전달
             return "redirect:/board_list";
         } catch (IllegalArgumentException e) {
             model.addAttribute("error", e.getMessage());
-            return "login";
+            //페이지 안넘어가서 일단 싹다 보드리스트로 넘어가게 해둠 241212
+            // return "login";
+            return "redirect:/board_list";
         }
     }
 }

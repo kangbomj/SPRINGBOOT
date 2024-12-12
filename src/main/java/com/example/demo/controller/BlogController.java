@@ -45,12 +45,15 @@ public class BlogController {
             @RequestParam(defaultValue = "") String keyword,
             HttpSession session) {
 
-        String userId = (String) session.getAttribute("userId");
-        if (userId == null) {
-            return "redirect:/login";
-        }
+        //오류 해결못하겠어서 일단 로그인 하면 보드리스트로 넘어가는거 막아뒀음. index -> board_list
+        // String userId = (String) session.getAttribute("userId");
+        // String email = (String) session.getAttribute("email");
 
-        System.out.println("세션 userId : " + userId);
+        // if (userId == null) {
+        //     return "redirect:/login";
+        // }
+        
+        // System.out.println("세션 userId : " + userId);
         int pageSize = 3;
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<Board> list;
@@ -68,6 +71,7 @@ public class BlogController {
         model.addAttribute("currentPage", page);
         model.addAttribute("keyword", keyword);
         model.addAttribute("startNum", startNum);
+        //model.addAttribute("email", email);
         return "board_list";
     }
 
