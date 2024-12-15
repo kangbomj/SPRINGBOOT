@@ -1,7 +1,7 @@
 /********** Template CSS **********/
 :root {
-    --primary: #6244C5;
-    --secondary: #FFC448;
+    --primary: #a00000;
+    --secondary: #ffffff;
     --light: #FAFAFB;
     --dark: #12141D;
 }
@@ -85,7 +85,7 @@
 
 .navbar .navbar-nav .nav-link {
     padding: 20px 15px;
-    color: var(--dark);
+    color: var(--white);
     font-size: 18px;
     font-weight: 600;
     outline: none;
@@ -251,7 +251,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: url(../img/bg-icon.png) center center no-repeat;
+    /*background: url(../img/bg-icon.png) center center no-repeat;*/
     background-size: cover;
 }
 
@@ -282,7 +282,7 @@
     height: 100%;
     top: 0;
     left: 0;
-    background: rgba(98, 68, 197, .9);
+    background: rgba(0, 0, 0, 0.616);
     display: flex;
     align-items: flex-end;
     justify-content: flex-start;
@@ -300,7 +300,14 @@
 
 /*** Team ***/
 .team-item img {
-    transition: .5s;
+    /*transition: .5s;*/
+    width: 350px; /* 원하는 크기로 조정 */
+    height: 350px; /* 원하는 크기로 조정 */
+    object-fit: cover; /* 이미지 비율 유지하면서 잘라냄 */
+    border-radius: 200%; /* 원형으로 만듦 */
+    display: flex;
+    margin: 0 auto 15px auto; /* 가운데 정렬 */
+    flex-direction: column;
 }
 
 .team-item:hover img {
